@@ -1,0 +1,1847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ananthrudra Wavelength — Smart Living, Illuminated</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Neue+Haas+Grotesk+Display+Pro:wght@400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --warm: #ff9f43;
+    --cool: #74b9ff;
+    --party-r: #fd79a8;
+    --party-g: #00cec9;
+    --focus-c: #dfe6e9;
+    --relax-c: #f0932b;
+    --bg-deep: #0a0a0f;
+    --surface: #12121a;
+    --text-primary: #f5f0e8;
+    --text-muted: #8a8a9a;
+    --gold: #d4a853;
+    --scene-bg: #0a0a0f;
+    --ambient-color: rgba(255,159,67,0.08);
+    --light-hue: 35;
+    --light-sat: 90%;
+    --light-bright: 60%;
+    --room-temp: 24;
+    --cursor-x: 50vw;
+    --cursor-y: 50vh;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg-deep);
+    color: var(--text-primary);
+    font-family: 'Neue Haas Grotesk Display Pro', 'Helvetica Neue', sans-serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* ── CUSTOM CURSOR ── */
+  #cursor {
+    position: fixed;
+    width: 12px; height: 12px;
+    background: var(--gold);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%,-50%);
+    transition: transform 0.1s, width 0.3s, height 0.3s, background 0.3s;
+    mix-blend-mode: difference;
+  }
+  #cursor-ring {
+    position: fixed;
+    width: 36px; height: 36px;
+    border: 1px solid rgba(212,168,83,0.5);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%,-50%);
+    transition: transform 0.15s ease-out, width 0.3s, height 0.3s, border-color 0.3s;
+  }
+  body:hover #cursor { opacity:1; }
+  a:hover ~ #cursor, button:hover ~ #cursor { width:20px; height:20px; }
+
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content:'';
+    position:fixed; inset:0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events:none; z-index:9000; opacity:0.4;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem 3rem;
+    background: linear-gradient(to bottom, rgba(10,10,15,0.95), transparent);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  .nav-logo {
+    display: flex; flex-direction: column;
+    font-family: 'Cormorant Garamond', serif;
+    line-height: 1;
+  }
+  .nav-logo .logo-main {
+    font-size: 1.4rem; font-weight: 600;
+    letter-spacing: 0.04em;
+    background: linear-gradient(135deg, #f5f0e8 40%, var(--gold));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .nav-logo .logo-sub {
+    font-size: 0.65rem; font-weight: 300;
+    letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--text-muted);
+    -webkit-text-fill-color: var(--text-muted);
+    margin-top: 2px;
+  }
+  .nav-links {
+    display: flex; gap: 2.5rem; list-style: none;
+  }
+  .nav-links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.78rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    transition: color 0.3s;
+    cursor: none;
+  }
+  .nav-links a:hover { color: var(--text-primary); }
+  .nav-cta {
+    background: none;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    padding: 0.6rem 1.5rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: none;
+    transition: all 0.3s;
+    font-family: inherit;
+  }
+  .nav-cta:hover { background: var(--gold); color: var(--bg-deep); }
+
+  /* ── HERO ── */
+  #hero {
+    position: relative;
+    height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+  .hero-ambient {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 60%, rgba(255,159,67,0.12) 0%, transparent 70%);
+    transition: all 1.5s ease;
+    pointer-events: none;
+  }
+  .hero-content {
+    position: relative; z-index: 2;
+    text-align: center;
+    max-width: 900px; padding: 0 2rem;
+  }
+  .hero-eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem; letter-spacing: 0.3em;
+    text-transform: uppercase; color: var(--gold);
+    margin-bottom: 1.5rem;
+    display: flex; align-items: center; justify-content: center; gap: 1rem;
+  }
+  .hero-eyebrow::before, .hero-eyebrow::after {
+    content: ''; display: block; width: 40px; height: 1px; background: var(--gold); opacity: 0.5;
+  }
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3.5rem, 9vw, 8rem);
+    font-weight: 300;
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    margin-bottom: 2rem;
+  }
+  .hero-title em { font-style: italic; color: var(--gold); }
+  .hero-subtitle {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    line-height: 1.8;
+    max-width: 480px; margin: 0 auto 3rem;
+    letter-spacing: 0.03em;
+  }
+  .hero-cta-row {
+    display: flex; gap: 1.5rem; justify-content: center; align-items: center;
+  }
+  .btn-primary {
+    background: var(--gold);
+    color: var(--bg-deep);
+    border: none; padding: 1rem 2.5rem;
+    font-size: 0.8rem; font-weight: 700;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    cursor: none; transition: all 0.3s; font-family: inherit;
+  }
+  .btn-primary:hover { background: #f0b96a; transform: translateY(-2px); }
+  .btn-ghost {
+    background: none;
+    color: var(--text-muted);
+    border: 1px solid rgba(255,255,255,0.15);
+    padding: 1rem 2.5rem;
+    font-size: 0.8rem; letter-spacing: 0.15em; text-transform: uppercase;
+    cursor: none; transition: all 0.3s; font-family: inherit;
+    display: flex; align-items: center; gap: 0.6rem;
+  }
+  .btn-ghost:hover { border-color: var(--text-muted); color: var(--text-primary); }
+  .scroll-hint {
+    position: absolute; bottom: 2.5rem; left: 50%;
+    transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    font-size: 0.6rem; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--text-muted); animation: scrollBounce 2s ease-in-out infinite;
+  }
+  .scroll-hint .arrow { width: 1px; height: 40px; background: linear-gradient(to bottom, var(--gold), transparent); }
+  @keyframes scrollBounce {
+    0%,100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(8px); }
+  }
+
+  /* ── ROOM SHOWCASE ── */
+  #room-section {
+    position: relative;
+    background: #080810;
+    padding: 6rem 0;
+  }
+  .section-header {
+    text-align: center; padding: 0 2rem; margin-bottom: 4rem;
+  }
+  .section-eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 1rem;
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    font-weight: 300; line-height: 1.1;
+  }
+  .section-title em { font-style: italic; color: var(--gold); }
+
+  /* ── LIVE ROOM ── */
+  #live-room {
+    position: relative;
+    max-width: 1100px; margin: 0 auto;
+    padding: 0 2rem;
+  }
+  .room-stage {
+    position: relative;
+    width: 100%; aspect-ratio: 16/9;
+    background: #07070e;
+    border: 1px solid rgba(255,255,255,0.04);
+    overflow: hidden;
+    border-radius: 4px;
+  }
+
+  /* Floor + walls */
+  .room-floor {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 38%;
+    background: linear-gradient(to top, #1a1408, #0e0c08);
+    transition: background 1.5s;
+  }
+  .room-wall-back {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 65%;
+    background: linear-gradient(to bottom, #0e0d16, #110f1a);
+    transition: background 1.5s;
+  }
+  .room-wall-left {
+    position: absolute;
+    top: 0; left: 0; bottom: 0; width: 12%;
+    background: linear-gradient(to right, #08080f, #0e0d16);
+    transition: background 1.5s;
+  }
+  .room-wall-right {
+    position: absolute;
+    top: 0; right: 0; bottom: 0; width: 12%;
+    background: linear-gradient(to left, #08080f, #0e0d16);
+    transition: background 1.5s;
+  }
+
+  /* Ceiling light */
+  .ceiling-light {
+    position: absolute;
+    top: 3%; left: 50%; transform: translateX(-50%);
+    width: 2px; height: 18%;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.3), transparent);
+  }
+  .ceiling-light::after {
+    content: '';
+    position: absolute;
+    bottom: -4px; left: 50%; transform: translateX(-50%);
+    width: 16px; height: 6px;
+    background: var(--warm);
+    border-radius: 50%;
+    box-shadow: 0 0 20px 8px var(--warm), 0 0 60px 20px var(--warm);
+    transition: all 1.5s;
+  }
+  .light-cone {
+    position: absolute;
+    top: 22%; left: 50%; transform: translateX(-50%);
+    width: 0; height: 0;
+    border-left: 200px solid transparent;
+    border-right: 200px solid transparent;
+    border-top: 320px solid rgba(255,159,67,0.06);
+    transition: border-top-color 1.5s, border-top-width 1.5s;
+    pointer-events: none;
+  }
+
+  /* Sofa */
+  .sofa {
+    position: absolute;
+    bottom: 36%; left: 50%; transform: translateX(-50%);
+    width: 42%;
+  }
+  .sofa-body {
+    width: 100%; height: 60px;
+    background: linear-gradient(to bottom, #2a2030, #1a1520);
+    border-radius: 8px 8px 0 0;
+    position: relative;
+    transition: background 1.5s;
+  }
+  .sofa-body::before {
+    content:''; position:absolute; top:8px; left:10%; right:10%; height:30px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 6px;
+  }
+  .sofa-base {
+    width: 96%; margin: 0 auto;
+    height: 18px;
+    background: #150f1a;
+    border-radius: 0 0 4px 4px;
+    transition: background 1.5s;
+  }
+  .sofa-pillow {
+    position: absolute; top: -14px;
+    width: 24%; height: 28px;
+    background: linear-gradient(to bottom, #3a2a48, #251836);
+    border-radius: 6px 6px 2px 2px;
+    transition: background 1.5s;
+  }
+  .sofa-pillow:nth-child(2) { left: 8%; }
+  .sofa-pillow:nth-child(3) { right: 8%; }
+  .sofa-armrest {
+    position: absolute; bottom: 0;
+    width: 10%; height: 78px;
+    background: #1e1528;
+    border-radius: 4px;
+    transition: background 1.5s;
+  }
+  .sofa-armrest.left { left: -5%; }
+  .sofa-armrest.right { right: -5%; }
+
+  /* Coffee table */
+  .coffee-table {
+    position: absolute;
+    bottom: 28%; left: 50%; transform: translateX(-50%);
+    width: 24%;
+  }
+  .ct-top {
+    width: 100%; height: 8px;
+    background: linear-gradient(to bottom, #2d2010, #1a1208);
+    border-radius: 3px 3px 0 0;
+    transition: background 1.5s;
+  }
+  .ct-legs {
+    display: flex; justify-content: space-between;
+    padding: 0 15%;
+  }
+  .ct-leg {
+    width: 4px; height: 18px;
+    background: #1a1208;
+    transition: background 1.5s;
+  }
+
+  /* TV */
+  .tv-unit {
+    position: absolute;
+    bottom: 38%; left: 50%; transform: translateX(-50%);
+    width: 36%;
+  }
+  .tv-screen {
+    width: 100%; aspect-ratio: 16/9;
+    background: #040408;
+    border: 2px solid #1a1a28;
+    border-radius: 4px;
+    position: relative; overflow: hidden;
+    transition: border-color 1s;
+  }
+  .tv-glow {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at center, rgba(74,185,255,0.15) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 1s;
+  }
+  .tv-content {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.3em; color: rgba(74,185,255,0.5);
+    letter-spacing: 0.1em;
+  }
+  .tv-stand {
+    width: 12%; height: 8px;
+    background: #1a1a28; margin: 0 auto;
+    transition: background 1s;
+  }
+  .tv-base { width: 22%; height: 4px; background: #1a1a28; margin: 0 auto; transition: background 1s; }
+
+  /* Blinds */
+  .window-unit {
+    position: absolute;
+    top: 8%; right: 16%;
+    width: 22%; height: 35%;
+  }
+  .window-frame {
+    width: 100%; height: 100%;
+    border: 2px solid #1e1e2e;
+    position: relative; overflow: hidden;
+    background: #020208;
+    transition: background 1.5s;
+  }
+  .blinds-container {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    transition: all 1s;
+  }
+  .blind-slat {
+    flex: 1;
+    background: #1a1a2a;
+    border-bottom: 1px solid #0e0e1e;
+    transition: all 1.5s;
+    transform-origin: top;
+  }
+  .window-light-beam {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(255,200,100,0.0), transparent);
+    transition: background 1.5s;
+    pointer-events: none;
+  }
+  .window-sill { width: 110%; left: -5%; position: relative; height: 6px; background: #1e1e2e; margin-top: 2px; }
+
+  /* Floor lamp */
+  .floor-lamp {
+    position: absolute;
+    bottom: 37%; left: 16%;
+    width: 3%;
+  }
+  .lamp-pole { width: 2px; height: 80px; background: #2a2a3a; margin: 0 auto; }
+  .lamp-shade {
+    width: 22px; height: 14px;
+    background: linear-gradient(to bottom, #2a2530, #1a1520);
+    border-radius: 50% 50% 30% 30%;
+    margin: 0 auto; position: relative;
+    overflow: hidden; transition: all 1.5s;
+  }
+  .lamp-shade::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 80%, rgba(255,200,100,0.8), transparent 70%);
+    opacity: 0; transition: opacity 1.5s;
+  }
+  .lamp-glow {
+    position: absolute;
+    top: -30px; left: 50%; transform: translateX(-50%);
+    width: 60px; height: 60px;
+    background: radial-gradient(circle, rgba(255,180,60,0.4), transparent 70%);
+    opacity: 0; transition: opacity 1.5s;
+    pointer-events: none;
+  }
+  .lamp-base { width: 14px; height: 6px; background: #1e1e2e; margin: 0 auto; border-radius: 50%; }
+
+  /* Smart thermostat widget */
+  .thermostat {
+    position: absolute;
+    top: 10%; left: 18%;
+    width: 7%;
+  }
+  .thermo-body {
+    width: 100%; aspect-ratio: 1;
+    border: 1px solid #2a2a3a;
+    border-radius: 50%;
+    background: #12121e;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    transition: border-color 1s;
+    position: relative; overflow: hidden;
+  }
+  .thermo-ring {
+    position: absolute; inset: -1px;
+    border-radius: 50%;
+    background: conic-gradient(var(--warm) 0%, transparent 60%);
+    opacity: 0.4; transition: all 1.5s;
+  }
+  .thermo-temp {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.45em; color: var(--text-primary);
+    z-index: 1; line-height: 1;
+  }
+  .thermo-label { font-size: 0.3em; color: var(--text-muted); z-index: 1; }
+
+  /* Ambient glow overlay */
+  .room-ambient {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 50% at 50% 20%, rgba(255,159,67,0.08), transparent 70%);
+    pointer-events: none; transition: all 1.5s;
+    mix-blend-mode: screen;
+  }
+
+  /* Music visualizer for party */
+  .music-bars {
+    position: absolute;
+    bottom: 27%; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 3px; align-items: flex-end;
+    height: 20px; opacity: 0; transition: opacity 0.5s;
+  }
+  .music-bar {
+    width: 3px; background: var(--party-r);
+    border-radius: 2px 2px 0 0;
+    animation: none; transition: background 0.5s;
+  }
+  @keyframes dance1 { 0%,100%{height:4px} 50%{height:16px} }
+  @keyframes dance2 { 0%,100%{height:12px} 50%{height:5px} }
+  @keyframes dance3 { 0%,100%{height:8px} 50%{height:18px} }
+  @keyframes dance4 { 0%,100%{height:14px} 50%{height:3px} }
+  @keyframes dance5 { 0%,100%{height:6px} 50%{height:20px} }
+
+  /* Focus mode - desk/laptop element */
+  .desk-lamp {
+    position: absolute;
+    bottom: 38%; right: 20%;
+    width: 8%;
+    opacity: 0; transition: opacity 1s;
+  }
+  .dl-arm { width: 2px; height: 30px; background: #2a2a3a; margin-left: 10px; transform-origin: bottom; transform: rotate(-20deg); }
+  .dl-shade { width: 18px; height: 10px; background: #2a2a3a; border-radius: 2px; margin-left: 2px; position: relative; }
+  .dl-beam {
+    position: absolute; bottom: -2px; left: 50%; transform: translateX(-50%);
+    width: 0; height: 0;
+    border-left: 25px solid transparent;
+    border-right: 25px solid transparent;
+    border-top: 35px solid rgba(255,240,180,0.12);
+    transition: border-top-color 1s;
+  }
+  .dl-base { width: 22px; height: 4px; background: #1e1e2e; border-radius: 50%; }
+
+  /* ── MOOD CONTROLS ── */
+  .scene-controls {
+    max-width: 1100px; margin: 3rem auto 0;
+    padding: 0 2rem;
+    display: flex; flex-direction: column; align-items: center; gap: 1.5rem;
+  }
+  .scene-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .scene-buttons {
+    display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;
+  }
+  .scene-btn {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 0.5rem;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.07);
+    padding: 1.2rem 2rem;
+    cursor: none;
+    transition: all 0.4s;
+    position: relative; overflow: hidden;
+    min-width: 140px;
+    font-family: inherit;
+  }
+  .scene-btn::before {
+    content: '';
+    position: absolute; inset: 0;
+    opacity: 0; transition: opacity 0.4s;
+  }
+  .scene-btn:hover::before { opacity: 1; }
+  .scene-btn.active { border-color: var(--btn-color, var(--gold)); }
+  .scene-btn.active::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 2px; background: var(--btn-color, var(--gold));
+  }
+  .scene-btn .btn-icon { font-size: 1.6rem; line-height: 1; }
+  .scene-btn .btn-name {
+    font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--text-muted); transition: color 0.3s;
+  }
+  .scene-btn .btn-desc {
+    font-size: 0.6rem; color: rgba(255,255,255,0.3);
+    letter-spacing: 0.05em;
+  }
+  .scene-btn.active .btn-name { color: var(--btn-color, var(--gold)); }
+  .scene-btn:hover .btn-name { color: var(--text-primary); }
+
+  /* Specific scene button colors */
+  .btn-relax { --btn-color: #f0932b; }
+  .btn-relax::before { background: radial-gradient(ellipse at top, rgba(240,147,43,0.08), transparent); }
+  .btn-focus { --btn-color: #74b9ff; }
+  .btn-focus::before { background: radial-gradient(ellipse at top, rgba(116,185,255,0.08), transparent); }
+  .btn-party { --btn-color: #fd79a8; }
+  .btn-party::before { background: radial-gradient(ellipse at top, rgba(253,121,168,0.08), transparent); }
+  .btn-morning { --btn-color: #ffeaa7; }
+  .btn-morning::before { background: radial-gradient(ellipse at top, rgba(255,234,167,0.08), transparent); }
+  .btn-night { --btn-color: #6c5ce7; }
+  .btn-night::before { background: radial-gradient(ellipse at top, rgba(108,92,231,0.08), transparent); }
+
+  /* Status bar */
+  .room-status {
+    display: flex; gap: 2rem; flex-wrap: wrap; justify-content: center;
+    margin-top: 1.5rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem; color: var(--text-muted);
+  }
+  .status-item {
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .status-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--gold); animation: pulse-dot 2s infinite;
+  }
+  @keyframes pulse-dot {
+    0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.8)}
+  }
+
+  /* ── SERVICES SECTION ── */
+  #services {
+    padding: 10rem 0 6rem;
+    background: linear-gradient(to bottom, #080810, #0a0a14);
+    position: relative; overflow: hidden;
+  }
+  #services::before {
+    content: 'AUTOMATE';
+    position: absolute;
+    top: 50%; left: 50%; transform: translate(-50%,-50%);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18vw; font-weight: 600;
+    color: rgba(255,255,255,0.015);
+    white-space: nowrap; pointer-events: none;
+    letter-spacing: -0.05em;
+  }
+  .services-grid {
+    max-width: 1200px; margin: 0 auto;
+    padding: 0 2rem;
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.05);
+    position: relative; z-index: 1;
+  }
+  .service-card {
+    background: #08080f;
+    padding: 3rem 2.5rem;
+    position: relative; overflow: hidden;
+    transition: background 0.4s;
+    cursor: none;
+  }
+  .service-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--card-accent, var(--gold)), transparent);
+    opacity: 0; transition: opacity 0.4s;
+  }
+  .service-card:hover { background: #0d0d1a; }
+  .service-card:hover::before { opacity: 1; }
+  .service-icon {
+    font-size: 2.2rem; margin-bottom: 1.5rem;
+    display: block;
+    filter: grayscale(0.3);
+    transition: filter 0.3s, transform 0.3s;
+  }
+  .service-card:hover .service-icon { filter: none; transform: scale(1.1); }
+  .service-num {
+    position: absolute; top: 2rem; right: 2.5rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.55rem; color: rgba(255,255,255,0.1);
+    letter-spacing: 0.15em;
+  }
+  .service-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem; font-weight: 400;
+    margin-bottom: 0.8rem; line-height: 1.2;
+  }
+  .service-desc {
+    font-size: 0.82rem; color: var(--text-muted);
+    line-height: 1.7;
+  }
+  .service-features {
+    margin-top: 1.5rem; list-style: none;
+    display: flex; flex-direction: column; gap: 0.5rem;
+  }
+  .service-features li {
+    font-size: 0.72rem; color: rgba(255,255,255,0.35);
+    display: flex; align-items: center; gap: 0.6rem;
+  }
+  .service-features li::before {
+    content: '';
+    width: 12px; height: 1px;
+    background: var(--card-accent, var(--gold));
+    flex-shrink: 0;
+  }
+
+  /* ── INTERACTIVE SLIDER ── */
+  #dimmer-section {
+    padding: 8rem 0;
+    background: #060610;
+    position: relative;
+  }
+  .dimmer-demo {
+    max-width: 900px; margin: 4rem auto 0;
+    padding: 0 2rem;
+  }
+  .dimmer-room {
+    position: relative;
+    width: 100%; aspect-ratio: 2/1;
+    background: #04040a;
+    border-radius: 2px; overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.04);
+  }
+  .dimmer-ceiling { position:absolute; top:0; left:0; right:0; height:50%; background: linear-gradient(to bottom, #0c0c1a, #08081a); }
+  .dimmer-floor { position:absolute; bottom:0; left:0; right:0; height:50%; background: linear-gradient(to top, #0a0806, #0c0c1a); }
+  .dimmer-light-blob {
+    position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+    width: 40%; height: 60%;
+    background: radial-gradient(ellipse at 50% 0%, rgba(255,200,80,0.5), transparent 70%);
+    opacity: 0.3; transition: opacity 0.2s, background 0.2s;
+    pointer-events: none;
+  }
+  .dimmer-bulb {
+    position: absolute; top: 5%; left: 50%; transform: translateX(-50%);
+    width: 12px; height: 12px;
+    background: #fff; border-radius: 50%;
+    box-shadow: 0 0 4px 2px #fff;
+    transition: all 0.2s;
+  }
+  .dimmer-furniture {
+    position: absolute; bottom: 15%; left: 50%; transform: translateX(-50%);
+    width: 60%; height: 20%;
+    background: #120e0a; border-radius: 4px;
+    opacity: 0.6;
+  }
+  .slider-wrap {
+    margin-top: 2rem;
+    display: flex; align-items: center; gap: 1.5rem;
+  }
+  .slider-label { font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); width: 60px; text-align: right; }
+  .slider-label.right { text-align: left; }
+  input[type=range] {
+    flex: 1; -webkit-appearance: none;
+    height: 2px; background: rgba(255,255,255,0.1);
+    border-radius: 1px; outline: none;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px; height: 18px;
+    border-radius: 50%; background: var(--gold);
+    cursor: none;
+    box-shadow: 0 0 8px rgba(212,168,83,0.5);
+    transition: box-shadow 0.2s;
+  }
+  input[type=range]::-webkit-slider-thumb:hover { box-shadow: 0 0 16px rgba(212,168,83,0.8); }
+  .dimmer-readout {
+    text-align: center; margin-top: 1rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem; color: var(--gold);
+    letter-spacing: 0.15em;
+  }
+  .color-sliders { display: flex; flex-direction: column; gap: 1rem; margin-top: 1.5rem; }
+  .color-row { display: flex; align-items: center; gap: 1rem; }
+  .color-label { font-family: 'Space Mono', monospace; font-size: 0.55rem; color: var(--text-muted); width: 90px; }
+  input.warm-slider::-webkit-slider-thumb { background: #ff9f43; box-shadow: 0 0 8px rgba(255,159,67,0.6); }
+  input.cool-slider::-webkit-slider-thumb { background: #74b9ff; box-shadow: 0 0 8px rgba(116,185,255,0.6); }
+  input.warm-slider { background: linear-gradient(to right, rgba(255,159,67,0.1), rgba(255,159,67,0.4)); }
+  input.cool-slider { background: linear-gradient(to right, rgba(116,185,255,0.1), rgba(116,185,255,0.4)); }
+
+  /* ── STATS/WHY SECTION ── */
+  #stats { padding: 8rem 0; background: #08080f; }
+  .stats-grid {
+    max-width: 1100px; margin: 0 auto;
+    padding: 0 2rem;
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 3rem; text-align: center;
+  }
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 4rem; font-weight: 300; color: var(--gold);
+    line-height: 1; margin-bottom: 0.5rem;
+  }
+  .stat-label { font-size: 0.75rem; color: var(--text-muted); letter-spacing: 0.1em; line-height: 1.6; }
+
+  /* ── PROJECTS / GALLERY ── */
+  #projects { padding: 8rem 0; background: linear-gradient(to bottom, #08080f, #0a0a14); }
+  .projects-scroller {
+    display: flex; gap: 1.5rem;
+    padding: 2rem 2rem;
+    overflow-x: auto; scroll-snap-type: x mandatory;
+    scrollbar-width: none; cursor: grab;
+  }
+  .projects-scroller::-webkit-scrollbar { display: none; }
+  .project-card {
+    flex-shrink: 0;
+    width: 340px; scroll-snap-align: start;
+    background: #10101a;
+    border: 1px solid rgba(255,255,255,0.05);
+    overflow: hidden; position: relative;
+    transition: transform 0.3s, border-color 0.3s;
+    cursor: none;
+  }
+  .project-card:hover { transform: translateY(-4px); border-color: rgba(212,168,83,0.2); }
+  .project-thumb {
+    width: 100%; aspect-ratio: 16/10;
+    position: relative; overflow: hidden;
+  }
+  .project-scene {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 3rem;
+    position: relative;
+  }
+  .project-info { padding: 1.5rem; }
+  .project-type {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.55rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 0.5rem;
+  }
+  .project-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem; font-weight: 400; margin-bottom: 0.3rem;
+  }
+  .project-loc { font-size: 0.75rem; color: var(--text-muted); }
+
+  /* ── CONTACT ── */
+  #contact {
+    padding: 10rem 0;
+    background: #060610;
+    text-align: center;
+    position: relative; overflow: hidden;
+  }
+  #contact::before {
+    content: '';
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(212,168,83,0.05), transparent 70%);
+    pointer-events: none;
+  }
+  .contact-inner { position: relative; z-index: 1; max-width: 600px; margin: 0 auto; padding: 0 2rem; }
+  .contact-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.5rem, 6vw, 5rem); font-weight: 300;
+    margin-bottom: 1.5rem; line-height: 1;
+  }
+  .contact-title em { font-style: italic; color: var(--gold); }
+  .contact-sub { font-size: 0.9rem; color: var(--text-muted); line-height: 1.8; margin-bottom: 3rem; }
+  .contact-form { display: flex; flex-direction: column; gap: 1rem; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .form-input {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: var(--text-primary); padding: 1rem 1.2rem;
+    font-family: inherit; font-size: 0.85rem;
+    outline: none; transition: border-color 0.3s;
+    -webkit-appearance: none;
+  }
+  .form-input:focus { border-color: var(--gold); }
+  .form-input::placeholder { color: rgba(255,255,255,0.2); }
+  textarea.form-input { resize: none; min-height: 100px; }
+  .form-select { cursor: none; }
+  .contact-info {
+    display: flex; gap: 3rem; justify-content: center;
+    margin-top: 4rem; flex-wrap: wrap;
+  }
+  .contact-detail { display: flex; flex-direction: column; gap: 0.3rem; }
+  .cd-label { font-family: 'Space Mono', monospace; font-size: 0.55rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); }
+  .cd-val { font-size: 0.85rem; color: var(--text-primary); }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 3rem;
+    background: #040408;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 1.5rem;
+    border-top: 1px solid rgba(255,255,255,0.04);
+  }
+  .footer-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    background: linear-gradient(135deg, #f5f0e8, var(--gold));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .footer-copy { font-size: 0.7rem; color: rgba(255,255,255,0.2); }
+  .footer-links { display: flex; gap: 1.5rem; }
+  .footer-links a { font-size: 0.7rem; color: rgba(255,255,255,0.2); text-decoration: none; transition: color 0.3s; cursor: none; }
+  .footer-links a:hover { color: var(--text-muted); }
+
+  /* ── FLOATING INDICATOR ── */
+  .mode-indicator {
+    position: fixed; bottom: 2rem; right: 2rem;
+    background: rgba(10,10,20,0.9);
+    border: 1px solid rgba(212,168,83,0.2);
+    padding: 0.8rem 1.2rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem; letter-spacing: 0.15em;
+    display: flex; flex-direction: column; gap: 0.3rem;
+    z-index: 500; backdrop-filter: blur(10px);
+    transition: border-color 0.5s;
+  }
+  .mi-label { color: var(--text-muted); }
+  .mi-mode { color: var(--gold); text-transform: uppercase; transition: color 0.5s; }
+  .mi-temp { color: rgba(255,255,255,0.4); }
+
+  /* ── SCROLL ANIMATIONS ── */
+  .fade-up {
+    opacity: 0; transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .fade-up.visible { opacity: 1; transform: translateY(0); }
+  .fade-up:nth-child(1) { transition-delay: 0s; }
+  .fade-up:nth-child(2) { transition-delay: 0.1s; }
+  .fade-up:nth-child(3) { transition-delay: 0.2s; }
+
+  /* ── HERO PARTICLES ── */
+  .particles { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+  .particle {
+    position: absolute; width: 1px; height: 1px;
+    background: var(--gold); border-radius: 50%;
+    animation: float-particle linear infinite;
+    opacity: 0;
+  }
+  @keyframes float-particle {
+    0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+    10% { opacity: 0.6; }
+    90% { opacity: 0.3; }
+    100% { transform: translateY(-20vh) translateX(calc(var(--drift) * 100px)); opacity: 0; }
+  }
+
+  /* ── PARTY STROBES ── */
+  .party-strobe {
+    position: absolute; inset: 0;
+    pointer-events: none; opacity: 0;
+    transition: opacity 0.3s;
+    border-radius: 2px;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    nav { padding: 1.2rem 1.5rem; }
+    .nav-links { display: none; }
+    .services-grid { grid-template-columns: 1fr; }
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+    .scene-buttons { gap: 0.6rem; }
+    .scene-btn { min-width: 100px; padding: 1rem 1.2rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Custom Cursor -->
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <span class="logo-main">Ananthrudra Wavelength</span>
+    <span class="logo-sub">Hyderabad · Smart Living</span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#room-section">Showcase</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="nav-cta">Get Consultation</button>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="particles" id="particles"></div>
+  <div class="hero-ambient" id="heroAmbient"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Hyderabad's Premier Automation Studio</div>
+    <h1 class="hero-title">
+      Live in the<br><em>perfect light</em>
+    </h1>
+    <p class="hero-subtitle">
+      We transform spaces into intelligent environments — where lighting, climate, and devices respond to the way you live.
+    </p>
+    <div class="hero-cta-row">
+      <button class="btn-primary" onclick="document.getElementById('room-section').scrollIntoView({behavior:'smooth'})">Experience the Demo</button>
+      <button class="btn-ghost" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">
+        <span>Book a Walkthrough</span>
+        <span>→</span>
+      </button>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="arrow"></div>
+  </div>
+</section>
+
+<!-- ROOM SHOWCASE -->
+<section id="room-section">
+  <div class="section-header fade-up">
+    <div class="section-eyebrow">Interactive Showroom</div>
+    <h2 class="section-title">Your room, <em>transformed</em><br>by a single touch</h2>
+  </div>
+
+  <div id="live-room">
+    <div class="room-stage" id="roomStage">
+      <!-- Layers -->
+      <div class="room-wall-back" id="wallBack"></div>
+      <div class="room-wall-left" id="wallLeft"></div>
+      <div class="room-wall-right" id="wallRight"></div>
+      <div class="room-floor" id="roomFloor"></div>
+
+      <!-- Ceiling light -->
+      <div class="ceiling-light" id="ceilingLight">
+        <div class="light-cone" id="lightCone"></div>
+      </div>
+
+      <!-- Window -->
+      <div class="window-unit" id="windowUnit">
+        <div class="window-frame" id="windowFrame">
+          <div class="window-light-beam" id="windowBeam"></div>
+          <div class="blinds-container" id="blindsContainer">
+            <div class="blind-slat"></div>
+            <div class="blind-slat"></div>
+            <div class="blind-slat"></div>
+            <div class="blind-slat"></div>
+            <div class="blind-slat"></div>
+            <div class="blind-slat"></div>
+            <div class="blind-slat"></div>
+            <div class="blind-slat"></div>
+          </div>
+        </div>
+        <div class="window-sill"></div>
+      </div>
+
+      <!-- Thermostat -->
+      <div class="thermostat" id="thermostat">
+        <div class="thermo-body">
+          <div class="thermo-ring" id="thermoRing"></div>
+          <span class="thermo-temp" id="thermoTemp">24°</span>
+          <span class="thermo-label">AUTO</span>
+        </div>
+      </div>
+
+      <!-- Floor Lamp -->
+      <div class="floor-lamp" id="floorLamp">
+        <div class="lamp-glow" id="lampGlow"></div>
+        <div class="lamp-shade" id="lampShade"></div>
+        <div class="lamp-pole"></div>
+        <div class="lamp-base"></div>
+      </div>
+
+      <!-- Sofa -->
+      <div class="sofa">
+        <div class="sofa-armrest left" id="sofaArmL"></div>
+        <div class="sofa-armrest right" id="sofaArmR"></div>
+        <div class="sofa-body" id="sofaBody">
+          <div class="sofa-pillow"></div>
+          <div class="sofa-pillow"></div>
+        </div>
+        <div class="sofa-base" id="sofaBase"></div>
+      </div>
+
+      <!-- Coffee Table -->
+      <div class="coffee-table">
+        <div class="ct-top" id="ctTop"></div>
+        <div class="ct-legs">
+          <div class="ct-leg"></div>
+          <div class="ct-leg"></div>
+        </div>
+      </div>
+
+      <!-- TV Unit -->
+      <div class="tv-unit" id="tvUnit" style="display:none"></div>
+      <!-- Actually position TV on back wall: -->
+
+      <!-- Music visualizer -->
+      <div class="music-bars" id="musicBars">
+        <div class="music-bar" style="height:6px" id="mb1"></div>
+        <div class="music-bar" style="height:12px" id="mb2"></div>
+        <div class="music-bar" style="height:8px" id="mb3"></div>
+        <div class="music-bar" style="height:16px" id="mb4"></div>
+        <div class="music-bar" style="height:4px" id="mb5"></div>
+        <div class="music-bar" style="height:10px" id="mb6"></div>
+        <div class="music-bar" style="height:14px" id="mb7"></div>
+        <div class="music-bar" style="height:7px" id="mb8"></div>
+        <div class="music-bar" style="height:18px" id="mb9"></div>
+        <div class="music-bar" style="height:5px" id="mb10"></div>
+        <div class="music-bar" style="height:11px" id="mb11"></div>
+        <div class="music-bar" style="height:9px" id="mb12"></div>
+      </div>
+
+      <!-- Party Strobe -->
+      <div class="party-strobe" id="partyStrobe"></div>
+
+      <!-- Desk lamp (focus mode) -->
+      <div class="desk-lamp" id="deskLamp">
+        <div class="dl-arm"></div>
+        <div class="dl-shade">
+          <div class="dl-beam"></div>
+        </div>
+        <div class="dl-base"></div>
+      </div>
+
+      <!-- Ambient glow -->
+      <div class="room-ambient" id="roomAmbient"></div>
+    </div>
+
+    <!-- SCENE CONTROLS -->
+    <div class="scene-controls">
+      <div class="scene-label">— Choose your mood scene —</div>
+      <div class="scene-buttons">
+        <button class="scene-btn btn-relax active" onclick="setScene('relax')">
+          <span class="btn-icon">🕯️</span>
+          <span class="btn-name">Relax</span>
+          <span class="btn-desc">Warm · Dim · Cozy</span>
+        </button>
+        <button class="scene-btn btn-focus" onclick="setScene('focus')">
+          <span class="btn-icon">💡</span>
+          <span class="btn-name">Focus</span>
+          <span class="btn-desc">Cool · Bright · Sharp</span>
+        </button>
+        <button class="scene-btn btn-party" onclick="setScene('party')">
+          <span class="btn-icon">🎉</span>
+          <span class="btn-name">Party</span>
+          <span class="btn-desc">Dynamic · Vibrant · Beat</span>
+        </button>
+        <button class="scene-btn btn-morning" onclick="setScene('morning')">
+          <span class="btn-icon">🌅</span>
+          <span class="btn-name">Morning</span>
+          <span class="btn-desc">Natural · Gradual · Fresh</span>
+        </button>
+        <button class="scene-btn btn-night" onclick="setScene('night')">
+          <span class="btn-icon">🌙</span>
+          <span class="btn-name">Night</span>
+          <span class="btn-desc">Deep · Ambient · Still</span>
+        </button>
+      </div>
+      <div class="room-status">
+        <div class="status-item">
+          <div class="status-dot"></div>
+          <span id="statusLights">Warm White · 2700K</span>
+        </div>
+        <div class="status-item">
+          <div class="status-dot" style="background:#74b9ff"></div>
+          <span id="statusTemp">24°C · Auto Cool</span>
+        </div>
+        <div class="status-item">
+          <div class="status-dot" style="background:#55efc4"></div>
+          <span id="statusBlinds">Blinds · 40% Open</span>
+        </div>
+        <div class="status-item">
+          <div class="status-dot" style="background:#a29bfe"></div>
+          <span id="statusDevices">3 Devices Active</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="section-header fade-up">
+    <div class="section-eyebrow">What We Do</div>
+    <h2 class="section-title">Every layer of your<br><em>intelligent home</em></h2>
+  </div>
+  <div class="services-grid">
+    <div class="service-card fade-up" style="--card-accent:#d4a853">
+      <span class="service-num">01</span>
+      <span class="service-icon">✦</span>
+      <h3 class="service-title">Lighting Automation</h3>
+      <p class="service-desc">Precision control across every luminaire — from warm sunset ambiance to crisp task lighting — all orchestrated intelligently.</p>
+      <ul class="service-features">
+        <li>Circadian rhythm lighting</li>
+        <li>Scene & mood programming</li>
+        <li>DALI / DMX / KNX integration</li>
+        <li>Energy harvesting controls</li>
+      </ul>
+    </div>
+    <div class="service-card fade-up" style="--card-accent:#74b9ff">
+      <span class="service-num">02</span>
+      <span class="service-icon">⚡</span>
+      <h3 class="service-title">Smart Device Integration</h3>
+      <p class="service-desc">Unify your entire ecosystem — AV, security, climate, and voice — into one seamless, responsive experience.</p>
+      <ul class="service-features">
+        <li>Control4 / Crestron / Savant</li>
+        <li>Alexa & Google Home</li>
+        <li>Smart lock & camera systems</li>
+        <li>Multi-room AV distribution</li>
+      </ul>
+    </div>
+    <div class="service-card fade-up" style="--card-accent:#fd79a8">
+      <span class="service-num">03</span>
+      <span class="service-icon">◈</span>
+      <h3 class="service-title">Ambiance & Interior Design</h3>
+      <p class="service-desc">Lighting as architecture. We collaborate with designers to craft emotional spaces where light tells the story.</p>
+      <ul class="service-features">
+        <li>Cove & accent lighting design</li>
+        <li>Material-aware color tuning</li>
+        <li>Art & landscape illumination</li>
+        <li>Hospitality & commercial</li>
+      </ul>
+    </div>
+    <div class="service-card fade-up" style="--card-accent:#55efc4">
+      <span class="service-num">04</span>
+      <span class="service-icon">◉</span>
+      <h3 class="service-title">Climate Intelligence</h3>
+      <p class="service-desc">Adaptive HVAC control that learns your preferences, monitors air quality, and adjusts for comfort and efficiency.</p>
+      <ul class="service-features">
+        <li>Predictive temperature zones</li>
+        <li>CO₂ & air quality sensing</li>
+        <li>Geo-fencing comfort schedules</li>
+        <li>Energy dashboards</li>
+      </ul>
+    </div>
+    <div class="service-card fade-up" style="--card-accent:#a29bfe">
+      <span class="service-num">05</span>
+      <span class="service-icon">▣</span>
+      <h3 class="service-title">Motorised Blinds & Shading</h3>
+      <p class="service-desc">Solar-aware automated blinds that optimize natural light, privacy, and thermal comfort throughout the day.</p>
+      <ul class="service-features">
+        <li>Somfy & Lutron Sivoia systems</li>
+        <li>Sun-tracking algorithms</li>
+        <li>Blackout & solar dual-fabric</li>
+        <li>Scene integration</li>
+      </ul>
+    </div>
+    <div class="service-card fade-up" style="--card-accent:#fdcb6e">
+      <span class="service-num">06</span>
+      <span class="service-icon">◆</span>
+      <h3 class="service-title">Bespoke Consulting</h3>
+      <p class="service-desc">From new build specification to retrofit — our consultants work at every stage to future-proof your space.</p>
+      <ul class="service-features">
+        <li>Architect & ID collaboration</li>
+        <li>3D lighting simulation</li>
+        <li>Technical documentation</li>
+        <li>On-site commissioning & training</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- DIMMER DEMO -->
+<section id="dimmer-section">
+  <div class="section-header fade-up">
+    <div class="section-eyebrow">Live Controls</div>
+    <h2 class="section-title">Dial in your <em>perfect atmosphere</em></h2>
+  </div>
+  <div class="dimmer-demo fade-up">
+    <div class="dimmer-room" id="dimmerRoom">
+      <div class="dimmer-ceiling"></div>
+      <div class="dimmer-floor"></div>
+      <div class="dimmer-light-blob" id="dimmerBlob"></div>
+      <div class="dimmer-bulb" id="dimmerBulb"></div>
+      <div class="dimmer-furniture"></div>
+    </div>
+    <div style="display:flex; gap:3rem; margin-top:2rem; flex-wrap:wrap">
+      <div style="flex:1; min-width:200px">
+        <div class="slider-wrap">
+          <span class="slider-label">DIM</span>
+          <input type="range" id="brightnessSlider" min="0" max="100" value="60" oninput="updateDimmer()">
+          <span class="slider-label right">BRIGHT</span>
+        </div>
+        <div class="dimmer-readout" id="brightnessVal">Brightness · 60%</div>
+      </div>
+      <div style="flex:1; min-width:200px">
+        <div class="color-sliders">
+          <div class="color-row">
+            <span class="color-label">WARM (2700K)</span>
+            <input type="range" class="warm-slider" id="warmSlider" min="0" max="100" value="70" oninput="updateColorTemp()">
+          </div>
+          <div class="color-row">
+            <span class="color-label">COOL (6500K)</span>
+            <input type="range" class="cool-slider" id="coolSlider" min="0" max="100" value="30" oninput="updateColorTemp()">
+          </div>
+        </div>
+        <div class="dimmer-readout" id="tempVal">Color Temp · 3200K</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section id="stats">
+  <div class="stats-grid">
+    <div class="fade-up" style="text-align:center">
+      <div class="stat-num">340+</div>
+      <div class="stat-label">Residences automated<br>across Hyderabad</div>
+    </div>
+    <div class="fade-up" style="text-align:center">
+      <div class="stat-num">12</div>
+      <div class="stat-label">Smart system brands<br>we install & integrate</div>
+    </div>
+    <div class="fade-up" style="text-align:center">
+      <div class="stat-num">38%</div>
+      <div class="stat-label">Average energy savings<br>per automated home</div>
+    </div>
+    <div class="fade-up" style="text-align:center">
+      <div class="stat-num">8yrs</div>
+      <div class="stat-label">Delivering bespoke<br>smart homes in Telangana</div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-header fade-up">
+    <div class="section-eyebrow">Recent Work</div>
+    <h2 class="section-title">Spaces we've <em>reimagined</em></h2>
+  </div>
+  <div class="projects-scroller" id="projectsScroller">
+    <div class="project-card">
+      <div class="project-thumb">
+        <div class="project-scene" style="background:linear-gradient(135deg,#1a0e05,#2d1a0a)">
+          <span>🏠</span>
+          <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 30%,rgba(255,150,50,0.3),transparent 70%)"></div>
+        </div>
+      </div>
+      <div class="project-info">
+        <div class="project-type">Residential · Full Home</div>
+        <div class="project-name">Jubilee Hills Villa</div>
+        <div class="project-loc">Hyderabad — 4,200 sq ft · 42 zones</div>
+      </div>
+    </div>
+    <div class="project-card">
+      <div class="project-thumb">
+        <div class="project-scene" style="background:linear-gradient(135deg,#050e1a,#0a1e2d)">
+          <span>🏢</span>
+          <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 30%,rgba(100,185,255,0.3),transparent 70%)"></div>
+        </div>
+      </div>
+      <div class="project-info">
+        <div class="project-type">Commercial · Office</div>
+        <div class="project-name">Gachibowli Tech Hub</div>
+        <div class="project-loc">HITEC City — 18,000 sq ft · Circadian system</div>
+      </div>
+    </div>
+    <div class="project-card">
+      <div class="project-thumb">
+        <div class="project-scene" style="background:linear-gradient(135deg,#0e0514,#1a0a20)">
+          <span>🍽️</span>
+          <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 30%,rgba(200,100,255,0.25),transparent 70%)"></div>
+        </div>
+      </div>
+      <div class="project-info">
+        <div class="project-type">Hospitality · Restaurant</div>
+        <div class="project-name">Banjara Hills Bistro</div>
+        <div class="project-loc">Banjara Hills — Dynamic scene programming</div>
+      </div>
+    </div>
+    <div class="project-card">
+      <div class="project-thumb">
+        <div class="project-scene" style="background:linear-gradient(135deg,#0a0e05,#151a08)">
+          <span>🌿</span>
+          <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 30%,rgba(100,220,100,0.2),transparent 70%)"></div>
+        </div>
+      </div>
+      <div class="project-info">
+        <div class="project-type">Residential · Penthouse</div>
+        <div class="project-name">Kokapet Sky Residence</div>
+        <div class="project-loc">Kokapet — Rooftop + biophilic lighting</div>
+      </div>
+    </div>
+    <div class="project-card">
+      <div class="project-thumb">
+        <div class="project-scene" style="background:linear-gradient(135deg,#0e0a05,#1a1405)">
+          <span>🎭</span>
+          <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 30%,rgba(255,200,50,0.25),transparent 70%)"></div>
+        </div>
+      </div>
+      <div class="project-info">
+        <div class="project-type">Cultural · Showroom</div>
+        <div class="project-name">Necklace Road Gallery</div>
+        <div class="project-loc">Hussain Sagar — Museum-grade accent system</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-inner">
+    <div class="section-eyebrow fade-up">Start Your Project</div>
+    <h2 class="contact-title fade-up">Let's <em>illuminate</em><br>your world</h2>
+    <p class="contact-sub fade-up">Schedule a free home consultation or visit our Hyderabad showroom to experience smart living firsthand.</p>
+    <div class="contact-form fade-up">
+      <div class="form-row">
+        <input type="text" class="form-input" placeholder="Your Name">
+        <input type="email" class="form-input" placeholder="Email Address">
+      </div>
+      <div class="form-row">
+        <input type="tel" class="form-input" placeholder="Phone Number">
+        <select class="form-input form-select">
+          <option value="" style="background:#12121a">Project Type</option>
+          <option style="background:#12121a">New Home Automation</option>
+          <option style="background:#12121a">Retrofit / Upgrade</option>
+          <option style="background:#12121a">Commercial Space</option>
+          <option style="background:#12121a">Hospitality</option>
+        </select>
+      </div>
+      <textarea class="form-input" placeholder="Tell us about your space and vision..."></textarea>
+      <button class="btn-primary" style="width:100%;padding:1.2rem;font-size:0.85rem">Send Enquiry →</button>
+    </div>
+    <div class="contact-info">
+      <div class="contact-detail">
+        <span class="cd-label">Showroom</span>
+        <span class="cd-val">Banjara Hills, Road No. 12</span>
+        <span class="cd-val" style="color:var(--text-muted);font-size:0.75rem">Hyderabad 500034</span>
+      </div>
+      <div class="contact-detail">
+        <span class="cd-label">Call Us</span>
+        <span class="cd-val">+91 40 4567 8900</span>
+      </div>
+      <div class="contact-detail">
+        <span class="cd-label">Hours</span>
+        <span class="cd-val">Mon–Sat, 10am – 7pm</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Ananthrudra Wavelength</div>
+  <span class="footer-copy">© 2025 Ananthrudra Wavelength. All rights reserved.</span>
+  <div class="footer-links">
+    <a href="#">Instagram</a>
+    <a href="#">LinkedIn</a>
+    <a href="#">Privacy</a>
+  </div>
+</footer>
+
+<!-- MODE INDICATOR -->
+<div class="mode-indicator" id="modeIndicator">
+  <span class="mi-label">ACTIVE SCENE</span>
+  <span class="mi-mode" id="miMode">Relax</span>
+  <span class="mi-temp" id="miTemp">24°C · 2700K</span>
+</div>
+
+<script>
+// ── CURSOR ──
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+(function animCursor() {
+  rx += (mx - rx) * 0.18;
+  ry += (my - ry) * 0.18;
+  cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
+  ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+  requestAnimationFrame(animCursor);
+})();
+
+// ── PARTICLES ──
+const particlesEl = document.getElementById('particles');
+for (let i = 0; i < 30; i++) {
+  const p = document.createElement('div');
+  p.className = 'particle';
+  const size = Math.random() * 3 + 1;
+  p.style.cssText = `
+    left:${Math.random()*100}%;
+    width:${size}px; height:${size}px;
+    animation-duration:${8+Math.random()*12}s;
+    animation-delay:${Math.random()*15}s;
+    --drift:${(Math.random()-0.5)*2};
+    opacity:0;
+  `;
+  particlesEl.appendChild(p);
+}
+
+// ── SCENE ENGINE ──
+let currentScene = 'relax';
+let partyInterval = null;
+
+const scenes = {
+  relax: {
+    wallColor: 'linear-gradient(to bottom, #110d16, #150f1a)',
+    floorColor: 'linear-gradient(to top, #1e1510, #120e0a)',
+    lightColor: '#ff9f43',
+    lightShadow: '0 0 20px 8px #ff9f43, 0 0 60px 20px rgba(255,159,67,0.6)',
+    coneColor: 'rgba(255,159,67,0.07)',
+    ambientColor: 'radial-gradient(ellipse 70% 50% at 50% 20%, rgba(255,159,67,0.12), transparent 70%)',
+    blindsOpen: 0.3,
+    lampOn: true,
+    temp: '23°C',
+    kelvin: '2700K',
+    tempNum: 23,
+    statusLights: 'Warm White · 2700K',
+    statusTemp: '23°C · Auto Warm',
+    statusBlinds: 'Blinds · 30% Open',
+    statusDevices: '4 Devices Active',
+    sofaColor: 'linear-gradient(to bottom, #2a2030, #1a1520)',
+    heroAmbient: 'radial-gradient(ellipse 80% 60% at 50% 60%, rgba(255,159,67,0.12) 0%, transparent 70%)',
+    miMode: 'Relax',
+    miTemp: '23°C · 2700K',
+    tvOn: false,
+    deskLamp: false,
+    musicBars: false,
+    thermoColor: 'conic-gradient(#ff9f43 0%, transparent 60%)',
+  },
+  focus: {
+    wallColor: 'linear-gradient(to bottom, #0e0f1e, #10122a)',
+    floorColor: 'linear-gradient(to top, #0e100a, #0f1018)',
+    lightColor: '#b8d8ff',
+    lightShadow: '0 0 20px 8px #74b9ff, 0 0 60px 20px rgba(116,185,255,0.6)',
+    coneColor: 'rgba(116,185,255,0.08)',
+    ambientColor: 'radial-gradient(ellipse 70% 50% at 50% 20%, rgba(116,185,255,0.1), transparent 70%)',
+    blindsOpen: 0.85,
+    lampOn: false,
+    temp: '21°C',
+    kelvin: '6500K',
+    tempNum: 21,
+    statusLights: 'Cool White · 6500K',
+    statusTemp: '21°C · Ventilation On',
+    statusBlinds: 'Blinds · 85% Open',
+    statusDevices: '6 Devices Active',
+    sofaColor: 'linear-gradient(to bottom, #1e2030, #151828)',
+    heroAmbient: 'radial-gradient(ellipse 80% 60% at 50% 60%, rgba(116,185,255,0.08) 0%, transparent 70%)',
+    miMode: 'Focus',
+    miTemp: '21°C · 6500K',
+    tvOn: false,
+    deskLamp: true,
+    musicBars: false,
+    thermoColor: 'conic-gradient(#74b9ff 0%, transparent 60%)',
+  },
+  party: {
+    wallColor: 'linear-gradient(to bottom, #150a15, #1a0a1a)',
+    floorColor: 'linear-gradient(to top, #100a14, #0e0812)',
+    lightColor: '#fd79a8',
+    lightShadow: '0 0 20px 8px #fd79a8, 0 0 60px 20px rgba(253,121,168,0.8)',
+    coneColor: 'rgba(253,121,168,0.15)',
+    ambientColor: 'radial-gradient(ellipse 70% 50% at 50% 20%, rgba(253,121,168,0.15), transparent 70%)',
+    blindsOpen: 0,
+    lampOn: false,
+    temp: '22°C',
+    kelvin: 'RGBW',
+    tempNum: 22,
+    statusLights: 'RGBW Dynamic · Party',
+    statusTemp: '22°C · Fan On',
+    statusBlinds: 'Blinds · Closed',
+    statusDevices: '8 Devices Active',
+    sofaColor: 'linear-gradient(to bottom, #2a1030, #1a0a20)',
+    heroAmbient: 'radial-gradient(ellipse 80% 60% at 50% 60%, rgba(253,121,168,0.12) 0%, transparent 70%)',
+    miMode: 'Party 🎉',
+    miTemp: '22°C · RGBW',
+    tvOn: false,
+    deskLamp: false,
+    musicBars: true,
+    thermoColor: 'conic-gradient(#fd79a8 0%, transparent 60%)',
+  },
+  morning: {
+    wallColor: 'linear-gradient(to bottom, #12100e, #1a1610)',
+    floorColor: 'linear-gradient(to top, #1e1a10, #16140c)',
+    lightColor: '#ffeaa7',
+    lightShadow: '0 0 20px 8px #ffeaa7, 0 0 60px 20px rgba(255,234,167,0.5)',
+    coneColor: 'rgba(255,234,167,0.06)',
+    ambientColor: 'radial-gradient(ellipse 70% 50% at 50% 20%, rgba(255,234,167,0.1), transparent 70%)',
+    blindsOpen: 1,
+    lampOn: false,
+    temp: '25°C',
+    kelvin: '4000K',
+    tempNum: 25,
+    statusLights: 'Natural Light · 4000K',
+    statusTemp: '25°C · Circadian Mode',
+    statusBlinds: 'Blinds · Fully Open',
+    statusDevices: '5 Devices Active',
+    sofaColor: 'linear-gradient(to bottom, #241f1a, #1a1610)',
+    heroAmbient: 'radial-gradient(ellipse 80% 60% at 50% 60%, rgba(255,234,167,0.1) 0%, transparent 70%)',
+    miMode: 'Morning',
+    miTemp: '25°C · 4000K',
+    tvOn: false,
+    deskLamp: false,
+    musicBars: false,
+    thermoColor: 'conic-gradient(#ffeaa7 0%, transparent 60%)',
+  },
+  night: {
+    wallColor: 'linear-gradient(to bottom, #080610, #0a0814)',
+    floorColor: 'linear-gradient(to top, #080606, #0a0810)',
+    lightColor: '#a29bfe',
+    lightShadow: '0 0 10px 4px rgba(162,155,254,0.4), 0 0 30px 10px rgba(108,92,231,0.3)',
+    coneColor: 'rgba(162,155,254,0.03)',
+    ambientColor: 'radial-gradient(ellipse 70% 50% at 50% 20%, rgba(108,92,231,0.08), transparent 70%)',
+    blindsOpen: 0.1,
+    lampOn: false,
+    temp: '20°C',
+    kelvin: '1800K',
+    tempNum: 20,
+    statusLights: 'Deep Amber · 1800K',
+    statusTemp: '20°C · Sleep Mode',
+    statusBlinds: 'Blinds · 10% Open',
+    statusDevices: '2 Devices Active',
+    sofaColor: 'linear-gradient(to bottom, #151020, #100c18)',
+    heroAmbient: 'radial-gradient(ellipse 80% 60% at 50% 60%, rgba(108,92,231,0.06) 0%, transparent 70%)',
+    miMode: 'Night',
+    miTemp: '20°C · 1800K',
+    tvOn: false,
+    deskLamp: false,
+    musicBars: false,
+    thermoColor: 'conic-gradient(#a29bfe 0%, transparent 60%)',
+  }
+};
+
+function setScene(name) {
+  if (partyInterval) { clearInterval(partyInterval); partyInterval = null; }
+  currentScene = name;
+  const s = scenes[name];
+
+  // Buttons
+  document.querySelectorAll('.scene-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`.btn-${name}`)?.classList.add('active');
+
+  // Walls & floor
+  document.getElementById('wallBack').style.background = s.wallColor;
+  document.getElementById('wallLeft').style.background = s.wallColor.replace('bottom', 'right');
+  document.getElementById('wallRight').style.background = s.wallColor.replace('bottom', 'left');
+  document.getElementById('roomFloor').style.background = s.floorColor;
+
+  // Ceiling light
+  const ceilAfter = document.getElementById('ceilingLight');
+  ceilAfter.style.setProperty('--light-color', s.lightColor);
+  document.documentElement.style.setProperty('--warm', s.lightColor);
+  // Hack: update shadow via a style tag
+  updateCeilingLight(s.lightColor, s.lightShadow, s.coneColor);
+
+  // Ambient
+  document.getElementById('roomAmbient').style.background = s.ambientColor;
+  document.getElementById('heroAmbient').style.background = s.heroAmbient;
+
+  // Blinds
+  const slats = document.querySelectorAll('.blind-slat');
+  const open = s.blindsOpen;
+  slats.forEach((sl, i) => {
+    const tiltDeg = open * 85;
+    sl.style.transform = `rotateX(${tiltDeg}deg)`;
+    sl.style.background = open > 0.5
+      ? `rgba(${20+open*100},${18+open*80},${open*40},${1-open*0.5})`
+      : '#1a1a2a';
+  });
+  // Window light beam
+  document.getElementById('windowBeam').style.background =
+    open > 0.3 ? `linear-gradient(to bottom, rgba(255,220,${120+open*100},${open*0.4}), transparent)` : 'none';
+
+  // Floor lamp
+  const lampGlow = document.getElementById('lampGlow');
+  const lampShade = document.getElementById('lampShade');
+  lampGlow.style.opacity = s.lampOn ? '1' : '0';
+  lampShade.style.background = s.lampOn
+    ? 'linear-gradient(to bottom, #3a2f48, rgba(255,180,60,0.3))'
+    : 'linear-gradient(to bottom, #2a2530, #1a1520)';
+  if (s.lampOn) {
+    lampShade.style.setProperty('--after-opacity', '1');
+    lampShade.style.boxShadow = `0 0 15px rgba(255,180,60,0.4)`;
+  } else {
+    lampShade.style.boxShadow = 'none';
+  }
+
+  // Sofa color
+  document.getElementById('sofaBody').style.background = s.sofaColor;
+
+  // Desk lamp (focus)
+  document.getElementById('deskLamp').style.opacity = s.deskLamp ? '1' : '0';
+
+  // Music bars (party)
+  const musicBars = document.getElementById('musicBars');
+  musicBars.style.opacity = s.musicBars ? '1' : '0';
+  const mbArr = musicBars.querySelectorAll('.music-bar');
+  if (s.musicBars) {
+    const partyColors = ['#fd79a8','#00cec9','#a29bfe','#fd79a8','#74b9ff','#ffeaa7','#fd79a8','#00cec9','#a29bfe','#ffd32a','#ff7979','#00b894'];
+    mbArr.forEach((mb, i) => {
+      mb.style.background = partyColors[i % partyColors.length];
+      mb.style.animation = `dance${(i%5)+1} ${0.3+Math.random()*0.4}s ease-in-out infinite`;
+    });
+    partyInterval = setInterval(partyStrobe, 500);
+  } else {
+    mbArr.forEach(mb => mb.style.animation = 'none');
+    document.getElementById('partyStrobe').style.opacity = '0';
+  }
+
+  // Thermostat
+  document.getElementById('thermoRing').style.background = s.thermoColor;
+  document.getElementById('thermoTemp').textContent = s.tempNum + '°';
+
+  // Status bar
+  document.getElementById('statusLights').textContent = s.statusLights;
+  document.getElementById('statusTemp').textContent = s.statusTemp;
+  document.getElementById('statusBlinds').textContent = s.statusBlinds;
+  document.getElementById('statusDevices').textContent = s.statusDevices;
+
+  // Mode indicator
+  document.getElementById('miMode').textContent = s.miMode;
+  document.getElementById('miTemp').textContent = s.miTemp;
+  document.getElementById('modeIndicator').style.borderColor = `rgba(${hexToRgb(s.lightColor) || '212,168,83'},0.4)`;
+  document.getElementById('miMode').style.color = s.lightColor;
+}
+
+function hexToRgb(hex) {
+  const r = parseInt(hex.slice(1,3),16);
+  const g = parseInt(hex.slice(3,5),16);
+  const b = parseInt(hex.slice(5,7),16);
+  return `${r},${g},${b}`;
+}
+
+function updateCeilingLight(color, shadow, coneColor) {
+  // Dynamic style injection for ::after pseudo
+  let st = document.getElementById('dynamic-light-style');
+  if (!st) { st = document.createElement('style'); st.id = 'dynamic-light-style'; document.head.appendChild(st); }
+  st.textContent = `
+    .ceiling-light::after {
+      background: ${color} !important;
+      box-shadow: ${shadow} !important;
+    }
+    .light-cone {
+      border-top-color: ${coneColor} !important;
+    }
+  `;
+}
+
+let partyColorIndex = 0;
+const partyColorSets = [
+  { bg: 'rgba(253,121,168,0.05)', light: '#fd79a8' },
+  { bg: 'rgba(0,206,201,0.05)', light: '#00cec9' },
+  { bg: 'rgba(162,155,254,0.05)', light: '#a29bfe' },
+  { bg: 'rgba(255,232,75,0.04)', light: '#ffd32a' },
+];
+function partyStrobe() {
+  const cs = partyColorSets[partyColorIndex % partyColorSets.length];
+  partyColorIndex++;
+  document.getElementById('partyStrobe').style.cssText = `
+    background: ${cs.bg}; opacity: 0.8; transition: opacity 0.15s;
+  `;
+  setTimeout(() => { document.getElementById('partyStrobe').style.opacity = '0'; }, 150);
+  updateCeilingLight(cs.light,
+    `0 0 20px 8px ${cs.light}, 0 0 60px 20px ${cs.light}88`,
+    `${cs.bg}`);
+  document.getElementById('thermoRing').style.background = `conic-gradient(${cs.light} 0%, transparent 60%)`;
+}
+
+// ── DIMMER CONTROLS ──
+function updateDimmer() {
+  const val = document.getElementById('brightnessSlider').value;
+  const blob = document.getElementById('dimmerBlob');
+  const bulb = document.getElementById('dimmerBulb');
+  const warm = document.getElementById('warmSlider').value;
+  const cool = document.getElementById('coolSlider').value;
+  const ratio = warm / (warm + cool + 0.01);
+  const r = Math.round(255 * ratio + 116 * (1-ratio));
+  const g = Math.round(180 * ratio + 185 * (1-ratio));
+  const b = Math.round(50 * ratio + 255 * (1-ratio));
+  const opacity = val / 100;
+  blob.style.background = `radial-gradient(ellipse at 50% 0%, rgba(${r},${g},${b},${opacity*0.6}), transparent 70%)`;
+  blob.style.opacity = opacity;
+  bulb.style.background = `rgb(${r},${g},${b})`;
+  bulb.style.boxShadow = `0 0 ${val/10}px ${val/20}px rgb(${r},${g},${b}), 0 0 ${val/4}px ${val/8}px rgba(${r},${g},${b},0.5)`;
+  document.getElementById('brightnessVal').textContent = `Brightness · ${val}%`;
+  const kelvin = Math.round(2700 + (6500-2700) * cool/100);
+  document.getElementById('tempVal').textContent = `Color Temp · ${kelvin}K`;
+}
+function updateColorTemp() { updateDimmer(); }
+
+// ── SCROLL ANIMATIONS ──
+const fadeEls = document.querySelectorAll('.fade-up');
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.15 });
+fadeEls.forEach(el => io.observe(el));
+
+// ── SCROLL: hero ambient parallax ──
+window.addEventListener('scroll', () => {
+  const scrollY = window.scrollY;
+  const hero = document.getElementById('heroAmbient');
+  hero.style.transform = `translateY(${scrollY * 0.3}px)`;
+});
+
+// ── DRAG SCROLL FOR PROJECTS ──
+const scroller = document.getElementById('projectsScroller');
+let isDown = false, startX, scrollLeft;
+scroller.addEventListener('mousedown', e => {
+  isDown = true; scroller.style.cursor = 'grabbing';
+  startX = e.pageX - scroller.offsetLeft;
+  scrollLeft = scroller.scrollLeft;
+});
+scroller.addEventListener('mouseleave', () => { isDown = false; scroller.style.cursor = 'grab'; });
+scroller.addEventListener('mouseup', () => { isDown = false; scroller.style.cursor = 'grab'; });
+scroller.addEventListener('mousemove', e => {
+  if (!isDown) return;
+  e.preventDefault();
+  const x = e.pageX - scroller.offsetLeft;
+  scroller.scrollLeft = scrollLeft - (x - startX) * 1.2;
+});
+
+// ── HOVER: room elements ──
+document.querySelectorAll('.service-card, .scene-btn, .project-card').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    cursor.style.width = '24px'; cursor.style.height = '24px';
+    ring.style.width = '50px'; ring.style.height = '50px';
+  });
+  el.addEventListener('mouseleave', () => {
+    cursor.style.width = '12px'; cursor.style.height = '12px';
+    ring.style.width = '36px'; ring.style.height = '36px';
+  });
+});
+
+// ── ROOM HOVER: subtle ambient light follow ──
+const roomStage = document.getElementById('roomStage');
+roomStage.addEventListener('mousemove', e => {
+  const rect = roomStage.getBoundingClientRect();
+  const x = ((e.clientX - rect.left) / rect.width) * 100;
+  const y = ((e.clientY - rect.top) / rect.height) * 100;
+  document.getElementById('roomAmbient').style.background =
+    `radial-gradient(ellipse 50% 40% at ${x}% ${y}%, ${getSceneAmbientColor()}, transparent 70%)`;
+});
+roomStage.addEventListener('mouseleave', () => {
+  const s = scenes[currentScene];
+  document.getElementById('roomAmbient').style.background = s.ambientColor;
+});
+
+function getSceneAmbientColor() {
+  const colors = {
+    relax: 'rgba(255,159,67,0.15)',
+    focus: 'rgba(116,185,255,0.12)',
+    party: 'rgba(253,121,168,0.2)',
+    morning: 'rgba(255,234,167,0.12)',
+    night: 'rgba(108,92,231,0.1)'
+  };
+  return colors[currentScene] || 'rgba(255,159,67,0.12)';
+}
+
+// ── INIT ──
+setScene('relax');
+updateDimmer();
+
+// Music bar random heights on party
+setInterval(() => {
+  if (currentScene !== 'party') return;
+  document.querySelectorAll('.music-bar').forEach(b => {
+    const h = 3 + Math.random() * 18;
+    b.style.height = h + 'px';
+  });
+}, 120);
+</script>
+</body>
+</html>

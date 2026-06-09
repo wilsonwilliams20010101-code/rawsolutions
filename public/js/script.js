@@ -1,0 +1,1 @@
+// JS retained in index.ejs
