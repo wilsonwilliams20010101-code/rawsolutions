@@ -353,7 +353,7 @@ function App() {
               <span className="hero-logo-subline">COMPLETE LIGHTING SOLUTION</span>
             </h1>
             <p className="hero-copy">
-              Lighting design for the way you live, build, and move through a space.
+              Lighting design for refined living, thoughtful builds, and the way a space moves with you.
             </p>
             <div className="hero-actions">
               <a className="button button-light" href={CONTACT_LINK}>

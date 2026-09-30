@@ -389,13 +389,24 @@ summary:focus-visible {
 .hero-logo-line {
   font-size: clamp(16px, 1.9vw, 34px);
   font-weight: 400;
+  letter-spacing: 0.14em;
 }
 
 .hero-logo-subline {
   margin-top: 8px;
   font-size: clamp(12px, 1.1vw, 20px);
-  letter-spacing: 0.38em;
+  letter-spacing: 0.34em;
   font-weight: 400;
+}
+
+.hero-title::after {
+  content: "";
+  display: block;
+  width: min(34vw, 320px);
+  height: 1px;
+  margin-top: 16px;
+  background: linear-gradient(90deg, transparent, rgba(233, 199, 126, 0.7), transparent);
+  box-shadow: 0 0 18px rgba(214, 173, 79, 0.32);
 }
 
 .hero-copy {
