@@ -6,6 +6,7 @@ const CONTACT_PHONE_1 = "+91 90141 96568";
 const CONTACT_PHONE_2 = "+91 63003 77455";
 const CONTACT_PHONE_3 = "+91 93916 80846";
 const CONTACT_LINK = `mailto:${CONTACT_EMAIL}?subject=Lighting%20design%20enquiry`;
+const WHATSAPP_LINK = "https://wa.me/919014196568?text=Hello%2C%20I%27d%20like%20to%20discuss%20a%20lighting%20project.";
 
 const audiences = [
   {
@@ -204,6 +205,15 @@ function ArrowIcon({ diagonal = false }: { diagonal?: boolean }) {
   );
 }
 
+function WhatsAppIcon() {
+  return (
+    <svg className="whatsapp-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M20.2 11.6a8.2 8.2 0 0 1-12.1 7.2L4 20l1.3-3.8a8.2 8.2 0 1 1 14.9-4.6Z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+      <path d="M8.3 7.8c-.3-.1-.6-.1-.8.2l-.6.8c-.3.4-.4.9-.2 1.4.5 1.3 1.5 2.6 2.7 3.6 1.3 1.1 2.8 1.8 4.2 2 .5.1 1-.1 1.3-.5l.6-.8c.2-.3.2-.7-.2-.9l-1.8-1c-.3-.2-.6-.1-.8.2l-.6.7c-.9-.4-1.8-1.2-2.4-2l.5-.7c.2-.3.2-.6 0-.9L9 8.1c-.2-.2-.4-.3-.7-.3Z" stroke="currentColor" strokeWidth="1.35" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 function BrandMark() {
   return (
     <span className="brand-mark" aria-hidden="true">
@@ -313,9 +323,9 @@ function App() {
             </a>
           </nav>
 
-          <a className="header-cta" href={CONTACT_LINK}>
-            <span>Plan your lighting</span>
-            <ArrowIcon diagonal />
+          <a className="header-cta" href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp us">
+            <span>WhatsApp us</span>
+            <WhatsAppIcon />
           </a>
 
           <button
@@ -629,6 +639,9 @@ function App() {
             <div className="closing-actions">
               <a className="button button-light" href={CONTACT_LINK}>
                 Tell us about your project <ArrowIcon />
+              </a>
+              <a className="button button-light" href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer">
+                <WhatsAppIcon /> WhatsApp us
               </a>
               <span className="closing-email">Or email <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></span>
             </div>

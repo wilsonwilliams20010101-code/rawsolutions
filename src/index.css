@@ -256,6 +256,13 @@ summary:focus-visible {
   transition: transform 220ms var(--ease);
 }
 
+.whatsapp-icon {
+  display: block;
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+}
+
 .header-cta:hover .arrow-icon,
 .button:hover .arrow-icon,
 .footer-email:hover .arrow-icon {
@@ -1608,12 +1615,19 @@ summary:focus-visible {
   .header-inner {
     width: calc(100% - 48px);
     height: 76px;
-    grid-template-columns: 1fr auto;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    gap: 8px;
   }
 
-  .primary-nav,
-  .header-cta {
+  .primary-nav {
     display: none;
+  }
+
+  .header-cta {
+    min-height: 38px;
+    gap: 6px;
+    padding-inline: 9px;
+    font-size: 10px;
   }
 
   .menu-toggle {
@@ -1872,8 +1886,21 @@ summary:focus-visible {
   }
 
   .header-inner {
-    width: calc(100% - 36px);
+    width: calc(100% - 24px);
     height: 72px;
+    gap: 5px;
+  }
+
+  .header-cta {
+    min-height: 36px;
+    gap: 4px;
+    padding-inline: 7px;
+    font-size: 9px;
+  }
+
+  .header-cta .whatsapp-icon {
+    width: 16px;
+    height: 16px;
   }
 
   .brand-mark {
