@@ -2,7 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import type { CSSProperties, KeyboardEvent as ReactKeyboardEvent } from "react";
 
 const CONTACT_EMAIL = "info@rawsolutions.in";
-const CONTACT_NUMBER = "+91 6300-377-455";
+const CONTACT_PHONE_1 = "+91 90141 96568";
+const CONTACT_PHONE_2 = "+91 63003 77455";
+const CONTACT_PHONE_3 = "+91 93916 80846";
 const CONTACT_LINK = `mailto:${CONTACT_EMAIL}?subject=Lighting%20design%20enquiry`;
 
 const audiences = [
@@ -205,10 +207,11 @@ function ArrowIcon({ diagonal = false }: { diagonal?: boolean }) {
 function BrandMark() {
   return (
     <span className="brand-mark" aria-hidden="true">
-      <svg viewBox="0 0 40 40" fill="none">
-        <circle cx="20" cy="20" r="3.2" />
-        <path d="M20 3.5v8.1M20 28.4v8.1M3.5 20h8.1M28.4 20h8.1M8.3 8.3l5.7 5.7m11.9 11.9 5.8 5.8m0-23.4-5.8 5.7m-11.9 12-5.7 5.7" />
-      </svg>
+      <img
+        src="/images/raw-logo.svg"
+        alt="RAW Lighting Solution logo"
+        className="brand-logo-image"
+      />
     </span>
   );
 }
@@ -342,18 +345,18 @@ function App() {
           <img
             className="hero-photo"
             src="/images/raw-hero.jpg"
-            alt="Luxury modern living room with warm ambient lighting and elegant architectural finishes"
+            alt="A calm, contemporary living space brought to life with warm layered architectural lighting"
             fetchPriority="high"
           />
           <div className="hero-shade" aria-hidden="true" />
           <div className="hero-content page-width">
+            <p className="hero-eyebrow">Lighting design, considered.</p>
             <h1 className="hero-title" id="hero-title">
               <span className="hero-word">RAW</span>
-              <span className="hero-logo-line">RUDHRA ANANTHA WAVELENGHT</span>
-              <span className="hero-logo-subline">COMPLETE LIGHTING SOLUTION</span>
+              <span className="hero-subbrand"><i /> Lighting Solution</span>
             </h1>
             <p className="hero-copy">
-              Lighting design for refined living, thoughtful builds, and the way a space moves with you.
+              Lighting design for the way you live, build, and move through a space.
             </p>
             <div className="hero-actions">
               <a className="button button-light" href={CONTACT_LINK}>
@@ -629,6 +632,11 @@ function App() {
               </a>
               <span className="closing-email">Or email <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></span>
             </div>
+            <div className="closing-contacts" style={{ display: "flex", flexWrap: "wrap", gap: "1rem", marginTop: "1.5rem" }}>
+              <a href={`tel:${CONTACT_PHONE_1.replace(/\s+/g, "")}`}>{CONTACT_PHONE_1}</a>
+              <a href={`tel:${CONTACT_PHONE_2.replace(/\s+/g, "")}`}>{CONTACT_PHONE_2}</a>
+              <a href={`tel:${CONTACT_PHONE_3.replace(/\s+/g, "")}`}>{CONTACT_PHONE_3}</a>
+            </div>
           </div>
         </section>
       </main>
@@ -663,6 +671,9 @@ function App() {
             <div className="footer-contact-column">
               <p className="footer-label">Start a conversation</p>
               <a className="footer-email" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}<ArrowIcon diagonal /></a>
+              <a className="footer-email" href={`tel:${CONTACT_PHONE_1.replace(/\s+/g, "")}`}>{CONTACT_PHONE_1}</a>
+              <a className="footer-email" href={`tel:${CONTACT_PHONE_2.replace(/\s+/g, "")}`}>{CONTACT_PHONE_2}</a>
+              <a className="footer-email" href={`tel:${CONTACT_PHONE_3.replace(/\s+/g, "")}`}>{CONTACT_PHONE_3}</a>
               <a className="footer-top-link" href="#top">Back to top <span className="back-arrow"><ArrowIcon /></span></a>
             </div>
           </div>

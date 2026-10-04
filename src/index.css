@@ -132,55 +132,31 @@ summary:focus-visible {
   display: inline-flex;
   width: fit-content;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   color: inherit;
-}
-
-.brand-logo-slot {
-  display: inline-flex;
-  width: 30px;
-  height: 30px;
-  flex: 0 0 auto;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.08);
-  color: #f8f4ea;
-  font-size: 8px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  line-height: 1;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
-}
-
-.is-scrolled .brand-logo-slot {
-  border-color: rgba(25, 36, 29, 0.2);
-  background: rgba(25, 36, 29, 0.04);
-  color: var(--ink);
 }
 
 .brand-mark {
   display: inline-flex;
-  width: 28px;
+  width: 44px;
   height: 28px;
   flex: 0 0 auto;
   align-items: center;
   justify-content: center;
-  opacity: 0.88;
+  overflow: hidden;
 }
 
-.brand-mark svg {
+.brand-logo-image {
   width: 100%;
   height: 100%;
-  stroke: currentColor;
-  stroke-width: 1.15;
-  stroke-linecap: round;
+  object-fit: contain;
+  display: block;
+  filter: drop-shadow(0 0 10px rgba(213, 166, 81, 0.42));
   transition: transform 500ms var(--ease);
 }
 
-.brand-lockup:hover .brand-mark svg {
-  transform: rotate(45deg);
+.brand-lockup:hover .brand-logo-image {
+  transform: none;
 }
 
 .brand-name {
@@ -299,9 +275,7 @@ summary:focus-visible {
   height: min(100svh, 1020px);
   align-items: center;
   overflow: hidden;
-  background:
-    radial-gradient(circle at 50% 26%, rgba(189, 146, 66, 0.18), transparent 25%),
-    linear-gradient(180deg, #040404 0%, #090909 100%);
+  background: #273129;
   color: #f7f6f0;
 }
 
@@ -315,28 +289,21 @@ summary:focus-visible {
 
 .hero-photo {
   object-fit: cover;
-  object-position: center center;
-  opacity: 1;
-  filter: saturate(0.9) contrast(1.05) brightness(0.5);
+  object-position: center 53%;
   animation: hero-drift 28s ease-in-out infinite alternate;
 }
 
 .hero-shade {
   background:
-    linear-gradient(90deg, rgba(0, 0, 0, 0.94) 0%, rgba(0, 0, 0, 0.84) 18%, rgba(0, 0, 0, 0.48) 46%, rgba(0, 0, 0, 0.22) 100%),
-    linear-gradient(180deg, rgba(0, 0, 0, 0.34) 0%, rgba(0, 0, 0, 0.18) 100%);
+    linear-gradient(90deg, rgba(11, 17, 13, 0.85) 0%, rgba(11, 17, 13, 0.68) 31%, rgba(11, 17, 13, 0.27) 62%, rgba(11, 17, 13, 0.03) 100%),
+    linear-gradient(0deg, rgba(13, 19, 15, 0.55) 0%, transparent 31%, rgba(13, 19, 15, 0.05) 100%);
 }
 
 .hero-content {
   position: relative;
   z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding-top: 28px;
-  text-align: center;
-  transform: translateY(0);
+  padding-top: 65px;
+  transform: translateY(27px);
 }
 
 .hero-eyebrow,
@@ -346,72 +313,60 @@ summary:focus-visible {
   animation: hero-enter 950ms var(--ease) both;
 }
 
+.hero-eyebrow {
+  margin: 0 0 29px;
+  animation-delay: 120ms;
+  color: rgba(248, 247, 240, 0.84);
+  font-size: 11px;
+  font-weight: 550;
+  letter-spacing: 0.19em;
+  text-transform: uppercase;
+}
+
 .hero-title {
   display: flex;
   width: fit-content;
   flex-direction: column;
-  align-items: center;
-  margin: 0 auto;
+  align-items: flex-start;
+  margin: 0;
   animation-delay: 240ms;
-  color: #f5d89a;
+  color: #fffef8;
   font-family: "Manrope", sans-serif;
   font-weight: 500;
-  text-align: center;
 }
 
 .hero-word {
   display: block;
-  margin-left: 0;
-  font-family: "Georgia", "Times New Roman", serif;
-  font-size: clamp(200px, 25vw, 700px);
-  font-style: italic;
+  margin-left: -0.075em;
+  font-size: clamp(118px, 17vw, 238px);
   font-weight: 500;
-  letter-spacing: -0.17em;
-  line-height: 0.7;
-  color: #e7c57a;
-  text-shadow:
-    0 0 26px rgba(216, 182, 100, 0.2),
-    0 0 56px rgba(216, 182, 100, 0.14),
-    0 12px 26px rgba(0, 0, 0, 0.52);
-  filter: drop-shadow(0 0 12px rgba(237, 202, 128, 0.3));
+  letter-spacing: -0.105em;
+  line-height: 0.83;
 }
 
-.hero-logo-line,
-.hero-logo-subline {
-  display: block;
-  margin-top: 10px;
-  color: #f0d58d;
+.hero-subbrand {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 25px;
   font-family: "DM Sans", sans-serif;
-  letter-spacing: 0.2em;
+  font-size: clamp(11px, 1.25vw, 16px);
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  line-height: 1.2;
   text-transform: uppercase;
 }
 
-.hero-logo-line {
-  font-size: clamp(16px, 1.9vw, 34px);
-  font-weight: 400;
-  letter-spacing: 0.14em;
-}
-
-.hero-logo-subline {
-  margin-top: 8px;
-  font-size: clamp(12px, 1.1vw, 20px);
-  letter-spacing: 0.34em;
-  font-weight: 400;
-}
-
-.hero-title::after {
-  content: "";
-  display: block;
-  width: min(34vw, 320px);
+.hero-subbrand i {
+  display: inline-block;
+  width: 38px;
   height: 1px;
-  margin-top: 16px;
-  background: linear-gradient(90deg, transparent, rgba(233, 199, 126, 0.7), transparent);
-  box-shadow: 0 0 18px rgba(214, 173, 79, 0.32);
+  background: rgba(247, 246, 240, 0.66);
 }
 
 .hero-copy {
-  max-width: 640px;
-  margin: 32px auto 0;
+  max-width: 485px;
+  margin: 29px 0 0;
   animation-delay: 390ms;
   color: rgba(251, 250, 245, 0.84);
   font-size: clamp(16px, 1.6vw, 19px);
@@ -422,10 +377,9 @@ summary:focus-visible {
 .hero-actions {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
   align-items: center;
   gap: 28px;
-  margin-top: 28px;
+  margin-top: 35px;
   animation-delay: 520ms;
 }
 
